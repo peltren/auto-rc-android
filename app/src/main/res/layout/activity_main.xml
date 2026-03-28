@@ -54,63 +54,33 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/led_control_title"
+                android:text="@string/control_title"
                 android:textSize="22sp"
                 android:textStyle="bold"
                 android:textColor="#1D1D1F"
                 android:layout_marginBottom="24dp"/>
 
-            <!-- Switch Row -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="32dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/power_on_off"
-                    android:layout_centerVertical="true"
-                    android:textSize="16sp"
-                    android:textColor="#424245"/>
-
-                <com.google.android.material.switchmaterial.SwitchMaterial
-                    android:id="@+id/swLed"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    app:useMaterialThemeColors="true"/>
-            </RelativeLayout>
-
-            <!-- Mode Buttons Row -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnBlink"
-                    style="@style/Widget.Material3.Button.TonalButton"
-                    android:layout_width="0dp"
-                    android:layout_height="60dp"
-                    android:layout_weight="1"
-                    android:text="@string/btn_blink"
-                    android:textSize="14sp"
-                    android:letterSpacing="0.1"
-                    android:layout_marginEnd="8dp"
-                    app:cornerRadius="16dp"/>
+                <TextView
+                    android:id="@+id/tvSliderValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="512, 512"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#1D1D1F"/>
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnFade"
-                    style="@style/Widget.Material3.Button.TonalButton"
-                    android:layout_width="0dp"
-                    android:layout_height="60dp"
-                    android:layout_weight="1"
-                    android:text="@string/btn_fade"
-                    android:textSize="14sp"
-                    android:letterSpacing="0.1"
-                    android:layout_marginStart="8dp"
-                    app:cornerRadius="16dp"/>
+                <com.example.myblinker.JoystickView
+                    android:id="@+id/joystick"
+                    android:layout_width="280dp"
+                    android:layout_height="280dp"
+                    android:layout_marginTop="16dp"
+                    android:contentDescription="@string/joystick_content_description"/>
             </LinearLayout>
 
         </LinearLayout>

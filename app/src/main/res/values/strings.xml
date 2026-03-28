@@ -2,8 +2,7 @@
     <string name="app_name">My Blinker</string>
     <string name="status_disconnected">Disconnected</string>
     <string name="status_connected">Connected</string>
-    <string name="led_control_title">LED Control</string>
-    <string name="power_on_off">Power ON / OFF</string>
-    <string name="btn_blink">BLINK</string>
-    <string name="btn_fade">FADE</string>
+    <string name="control_title">Control</string>
+    <string name="joystick_content_description">Joystick: drag to set X and Y; release to return to center.</string>
+    <string name="joystick_xy_format">%1$d, %2$d</string>
 </resources>

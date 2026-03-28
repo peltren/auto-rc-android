@@ -50,7 +50,7 @@ class BleManager(private val context: Context) {
                 val device = result.device
 
                 // Look for the specific ESP32 device name
-                if (device.name == "ESP32_BLE_LED" && !isConnecting) {
+                if (device.name == "ESP32_BLE" && !isConnecting) {
                     isConnecting = true
                     scanner.stopScan(this)
                     connect(device)
