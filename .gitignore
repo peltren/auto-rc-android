@@ -1,0 +1,35 @@
+# --- Gradle ---
+.gradle/
+build/
+/*/build/
+
+# --- Kotlin ---
+.kotlin/
+kotlin-daemon-embeddable-*.jar
+
+# --- Android Studio / IntelliJ ---
+*.iml
+.idea/
+!/.idea/vcs.xml
+!/.idea/codeStyles/
+
+# --- Local configuration (Private) ---
+local.properties
+capture/
+
+# --- External Native Build ---
+.externalNativeBuild/
+.cxx/
+
+# --- Others ---
+*.bak
+*.swp
+*~
+.DS_Store
+thumbs.db
+Desktop.ini
+
+# --- Security ---
+*.jks
+*.keystore
+google-services.json

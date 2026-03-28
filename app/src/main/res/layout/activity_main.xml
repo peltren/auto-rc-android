@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/btnOn"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="ON"
+        android:textSize="18sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/btnOff"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"/>
+
+    <Button
+        android:id="@+id/btnOff"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="OFF"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/btnOn"
+        app:layout_constraintBottom_toTopOf="@id/btnBlink"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <Button
+        android:id="@+id/btnBlink"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="BLINK"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/btnOff"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+<TextView
+    android:id="@+id/tvStatus"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Desconectado"
+    android:textSize="18sp"
+    android:textStyle="bold"
+    android:layout_marginTop="48dp"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+android:padding="8dp"
+android:background="@android:color/darker_gray"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
