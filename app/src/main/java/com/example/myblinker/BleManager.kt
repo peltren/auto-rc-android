@@ -18,27 +18,41 @@ class BleManager(private val context: Context) {
     private var isConnected = false
     private var isConnecting = false
 
+    // UUIDs for the ESP32 BLE Service and Characteristic
     private val SERVICE_UUID = UUID.fromString("00001234-0000-1000-8000-00805f9b34fb")
     private val CHAR_UUID = UUID.fromString("00005678-0000-1000-8000-00805f9b34fb")
 
-    private lateinit var scanCallback: ScanCallback
+    private var scanCallback: ScanCallback? = null
 
+    // Listener to notify the UI about connection state changes
     var connectionListener: ((Boolean) -> Unit)? = null
 
     @Suppress("MissingPermission")
     fun startScan() {
         val bluetoothManager = context.getSystemService(BluetoothManager::class.java)
-        val bluetoothAdapter = bluetoothManager.adapter
+        val bluetoothAdapter = bluetoothManager?.adapter
+        
+        // Ensure Bluetooth is enabled before starting the scan
+        if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled) {
+            Log.e("BLE", "Bluetooth is not enabled")
+            return
+        }
+
         val scanner = bluetoothAdapter.bluetoothLeScanner
+        if (scanner == null) {
+            Log.e("BLE", "Could not get BLE scanner (Bluetooth might be off)")
+            return
+        }
 
         scanCallback = object : ScanCallback() {
             @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
             override fun onScanResult(callbackType: Int, result: ScanResult) {
                 val device = result.device
 
+                // Look for the specific ESP32 device name
                 if (device.name == "ESP32_BLE_LED" && !isConnecting) {
                     isConnecting = true
-                    scanner.stopScan(scanCallback)
+                    scanner.stopScan(this)
                     connect(device)
                 }
             }
@@ -67,18 +81,18 @@ class BleManager(private val context: Context) {
 
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 isConnected = true
-                Log.d("BLE", "CONECTADO 🔥")
+                Log.d("BLE", "CONNECTED 🔥")
 
-                connectionListener?.invoke(true) // 🟢
+                connectionListener?.invoke(true)
                 gatt.discoverServices()
 
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                Log.d("BLE", "DESCONECTADO ❌")
+                Log.d("BLE", "DISCONNECTED ❌")
 
                 isConnected = false
                 isConnecting = false
 
-                connectionListener?.invoke(false) // 🔴
+                connectionListener?.invoke(false)
 
                 bluetoothGatt?.close()
                 bluetoothGatt = null
@@ -91,9 +105,9 @@ class BleManager(private val context: Context) {
             characteristic = service?.getCharacteristic(CHAR_UUID)
 
             if (characteristic != null) {
-                Log.d("BLE", "CARACTERISTICA OK ✅")
+                Log.d("BLE", "CHARACTERISTIC OK ✅")
             } else {
-                Log.d("BLE", "❌ No encontrada")
+                Log.d("BLE", "❌ Not found")
             }
         }
     }
@@ -102,18 +116,24 @@ class BleManager(private val context: Context) {
     @Suppress("MissingPermission")
     fun send(data: String) {
         if (!isConnected) {
-            Log.d("BLE", "❌ No conectado")
+            Log.d("BLE", "❌ Not connected")
             return
         }
 
         val value = data.toByteArray(Charsets.UTF_8)
 
         characteristic?.let {
-            bluetoothGatt?.writeCharacteristic(
-                it,
-                value,
-                BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE
-            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                bluetoothGatt?.writeCharacteristic(
+                    it,
+                    value,
+                    BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE
+                )
+            } else {
+                // Fallback for older Android versions
+                it.value = value
+                bluetoothGatt?.writeCharacteristic(it)
+            }
         }
     }
 

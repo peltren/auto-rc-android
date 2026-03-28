@@ -10,21 +10,25 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.android.material.switchmaterial.SwitchMaterial
 
 class MainActivity : AppCompatActivity() {
 
+    // Required permissions for BLE functionality
     private val PERMISSIONS = arrayOf(
         Manifest.permission.BLUETOOTH_SCAN,
         Manifest.permission.BLUETOOTH_CONNECT,
         Manifest.permission.ACCESS_FINE_LOCATION
     )
 
+    // Check if all required permissions are granted
     private fun checkPermissions(): Boolean {
         return PERMISSIONS.all {
             ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
         }
     }
 
+    // Request missing permissions
     private fun requestPermissions() {
         ActivityCompat.requestPermissions(this, PERMISSIONS, 1)
     }
@@ -38,29 +42,41 @@ class MainActivity : AppCompatActivity() {
 
         bleManager = BleManager(applicationContext)
 
-        val btnOn = findViewById<Button>(R.id.btnOn)
-        val btnOff = findViewById<Button>(R.id.btnOff)
+        val swLed = findViewById<SwitchMaterial>(R.id.swLed)
         val btnBlink = findViewById<Button>(R.id.btnBlink)
+        val btnFade = findViewById<Button>(R.id.btnFade)
+        val tvStatus = findViewById<TextView>(R.id.tvStatus)
 
+        // Start scanning if permissions are granted, otherwise request them
         if (!checkPermissions()) {
             requestPermissions()
         } else {
             bleManager.startScan()
         }
 
-        btnOn.setOnClickListener { bleManager.send("1") }
-        btnOff.setOnClickListener { bleManager.send("0") }
-        btnBlink.setOnClickListener { bleManager.send("2") }
+        // Handle LED state switch
+        swLed.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                bleManager.send("1") // ON command
+            } else {
+                bleManager.send("0") // OFF command
+            }
+        }
 
-        val tvStatus = findViewById<TextView>(R.id.tvStatus)
+        // Handle Blink button click
+        btnBlink.setOnClickListener { bleManager.send("2") } // BLINK command
 
+        // Handle Fade button click
+        btnFade.setOnClickListener { bleManager.send("3") } // FADE command
+
+        // Update UI based on connection state
         bleManager.connectionListener = { connected ->
             runOnUiThread {
                 if (connected) {
-                    tvStatus.text = "Conectado"
+                    tvStatus.text = getString(R.string.status_connected)
                     tvStatus.setTextColor(getColor(android.R.color.holo_green_dark))
                 } else {
-                    tvStatus.text = "Desconectado"
+                    tvStatus.text = getString(R.string.status_disconnected)
                     tvStatus.setTextColor(getColor(android.R.color.holo_red_dark))
                 }
             }
@@ -80,6 +96,7 @@ class MainActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         if (requestCode == 1) {
+            // Start scanning if permissions were granted by the user
             if (grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
                 bleManager.startScan()
             }

@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">My Blinker</string>
+    <string name="status_disconnected">Disconnected</string>
+    <string name="status_connected">Connected</string>
+    <string name="led_control_title">LED Control</string>
+    <string name="power_on_off">Power ON / OFF</string>
+    <string name="btn_blink">BLINK</string>
+    <string name="btn_fade">FADE</string>
 </resources>
